@@ -13,3 +13,19 @@ exports.dateWithinRange = function (date, fromDate, toDate = new Date()) {
 exports.ynabCurrenct = function (amount) {
   return amount / 1000;
 }
+
+exports.groupByDate = function (transactions) {
+  return transactions.reduce( (transactionsByDate, transaction) => {
+    const { date, ...transactionWithoutDate } = transaction;
+    const prettyDate = moment().format('YYYY-MM-DD');
+
+    if(!transactionsByDate[prettyDate]) {
+      // create array for date
+      transactionsByDate[prettyDate] = [];
+    }
+
+    transactionsByDate[prettyDate] = [ transactionWithoutDate, ...transactionsByDate[prettyDate] ];
+
+    return transactionsByDate;
+  }, {})
+}

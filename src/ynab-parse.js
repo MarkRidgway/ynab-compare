@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const { Headers } = require('node-fetch');
+const moment = require('moment');
 const { dateWithinRange, ynabCurrenct } = require('./utils');
 
 const token = process.env.YNAB_TOKEN;
@@ -22,16 +23,16 @@ exports.readYNAB = function (fromDate, toDate = new Date()) {
 
       const simpleTransactions = filteredTransactions.map( (transaction) => {
         return {
-          date: transaction['date'],
-          payee_name: transaction['payee_name'],
+          date: moment(transaction['date']).valueOf(),
+          payee: transaction['payee_name'],
           amount: ynabCurrenct(transaction['amount']),
-          category_name: transaction['category_name'],
+          category: transaction['category_name'],
         };
       });
 
       resolve(simpleTransactions);
     }
-    catch (e) {
+    catch(e) {
       reject(e);
     }
   });
